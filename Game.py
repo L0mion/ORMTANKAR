@@ -116,4 +116,10 @@ class Game:
         return 'update game'
     def isWon(self):
         return self.won
+
+    def addInspiration(self):
+        x = random.randrange(0, tileDimeX, 1)
+        y = random.randrange(0, tileDimeY, 1)
+
+        
    

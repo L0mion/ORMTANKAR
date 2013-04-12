@@ -30,6 +30,11 @@ class Train:
             i = i - 1
         self.body[0] = newPos
 
+    def addBitsOfTrain(self):
+        position = Vec2(self.body[self.length-1].X(), self.body[self.length-1].Y())
+        self.body.append(position);
+        self.length += 1
+
     def Direction(self):
         return self.direction
 

@@ -28,12 +28,15 @@ class Train:
         #self.body[0] = newPos
 
         i = self.length - 1
+
+        lvl[self.body[i].X()][self.body[i].Y()].status = Status.EMPTY #last bit of snake is empty
+
         while i > 0:
-            lvl[self.body[i].X()][self.body[i].Y()].status = Status.EMPTY
-            lvl[self.body[i - 1].X()][self.body[i - 1].Y()].status = Status.OCCUPIED
             self.body[i] = self.body[i - 1]
             i = i - 1
         self.body[0] = newPos
+
+        lvl[self.body[0].X()][self.body[0].Y()].status = Status.OCCUPIED #new bit of snake is occupied
 
     def Direction(self):
         return self.direction

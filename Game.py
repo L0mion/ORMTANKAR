@@ -27,6 +27,7 @@ class Game:
         self.tileImage = pygame.image.load("img/tile.png")
         self.snake1Image = pygame.image.load("img/orm_red.png")
         self.snake2Image = pygame.image.load("img/orm_blue.png")
+        self.debugImage = pygame.image.load("img/debug.png");
 
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
@@ -117,6 +118,13 @@ class Game:
         train = self.players[1]
         for j in range(train.length):
             window.blit(self.snake2Image, (train.body[j].X() * tileImageWidth, train.body[j].Y() * tileImageHeight + offsetHUD))
+
+        for x in range(tileDimX):
+            for y in range(tileDimY):
+                tile = self.lvl[x][y]
+                if tile.status == Status.OCCUPIED:
+                    spritePos = x * tileImageWidth, y * tileImageHeight + offsetHUD
+                    window.blit(self.debugImage, spritePos)
 
     def isWon(self):
         return self.won

@@ -25,6 +25,7 @@ class Game:
 
         self.tileImage = pygame.image.load("img/tile.png")
         self.snake1Image = pygame.image.load("img/orm_red.png")
+        self.snake2Image = pygame.image.load("img/orm_blue.png")
 
     def start(self):
         self.startLvl()
@@ -54,17 +55,41 @@ class Game:
         playerPositions.append(Vec2(24, 14))
         self.players.append(Train(3, playerPositions))
 
-    def update(self, window):
+    def update(self):
+        for i in range(self.numPlayers):
+            train = self.players[i]
+
+            trainBody = train.Body()
+            trainPos = Vec2(trainBody[0].X(), trainBody[0].Y())
+            if train.Direction() == Direction.UP:
+                trainPos.y = trainBody[0].Y() - 1
+            elif train.Direction() == Direction.DOWN:
+                trainPos.y = trainBody[0].Y() + 1
+            elif train.Direction() == Direction.RIGHT:
+                trainPos.x = trainBody[0].X() + 1
+            elif train.Direction() == Direction.LEFT:
+                trainPos.x = trainBody[0].X() - 1
+
+            #check if valud
+
+            train.move(trainPos)
+    
+    def render(self, window):
         for x in range(tileDimX):
             for y in range(tileDimY):
                 #tile = self.lvl[x][y]
                 spritePos = x * tileImageWidth, y * tileImageHeight + offsetHUD
                 window.blit(self.tileImage, spritePos)
 
-        for i in range(self.numPlayers):
-            train = self.players[i]
-            for j in range(train.length):
-                window.blit(self.snake1Image, (train.body[j].X() * tileImageWidth, train.body[j].Y() * tileImageHeight + offsetHUD))
+        #render first player
+        train = self.players[0]
+        for j in range(train.length):
+            window.blit(self.snake1Image, (train.body[j].X() * tileImageWidth, train.body[j].Y() * tileImageHeight + offsetHUD))
+
+        #render second player
+        train = self.players[1]
+        for j in range(train.length):
+            window.blit(self.snake2Image, (train.body[j].X() * tileImageWidth, train.body[j].Y() * tileImageHeight + offsetHUD))
 
         return 'update game'
     def isWon(self):

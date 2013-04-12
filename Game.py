@@ -2,11 +2,13 @@ import random
 import Train
 import Tile
 import pygame
+import threading
 
 from random import *
 from Train import *
 from Tile import *
 from pygame import *
+from threading import *
 
 numPlayers = 2
 trainStartLength = 3
@@ -37,6 +39,9 @@ class Game:
     def start(self):
         self.startLvl()
         self.startPlayers()
+
+        #init multithreading functions
+        self.updatePlayers()
         
     def startLvl(self): #initializes level
         #init lvl
@@ -69,8 +74,8 @@ class Game:
         label = self.hudFont.render("Score: " +str(score), 1, (255, 255, 255))
         window.blit(label, (400, 45))
 
-    def update(self):
 
+    def update(self):
         for i in range(self.numPlayers):
             train = self.players[i]
 
@@ -103,7 +108,10 @@ class Game:
                 train.addBitsOfTrain()
 
             train.move(trainPos, self.lvl)
-    
+
+    #def update(self):
+    #    self.updatePlayers()
+        
     def render(self, window):
         self.renderHud(window)
 

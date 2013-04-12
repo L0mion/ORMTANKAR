@@ -94,7 +94,7 @@ class Game:
                 trainPos.y = tileDimY - 1
 
             tile = self.lvl[trainPos.X()][trainPos.Y()]
-            if tile.Status == Status.OCCUPIED:
+            if tile.status == Status.OCCUPIED:
                 train.kill()
                 self.gameOver = True
 

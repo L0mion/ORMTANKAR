@@ -4,13 +4,12 @@ from SimpleMath import *
 
 class Status:
     EMPTY = 0
-    TRAIN1 = 1
-    TRAIN2 = 2
-    TRAINFOOD = 3
+    OCCUPIED = 1
+    TRAINFOOD = 2
 
 class Special:
     NA = 0
-    THOUGHT = 1
+    SPECIAL = 1
 
 class Tile:
     def __init__(self, status, special):

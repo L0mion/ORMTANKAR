@@ -89,4 +89,4 @@ def main():
             runMenu(startScreen, window)
             
         pygame.display.update()
-        fpsClock.tick(30)
+        fpsClock.tick(2)

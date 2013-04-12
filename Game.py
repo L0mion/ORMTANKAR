@@ -28,6 +28,7 @@ class Game:
         self.snake1Image = pygame.image.load("img/orm_red.png")
         self.snake2Image = pygame.image.load("img/orm_blue.png")
         self.debugImage = pygame.image.load("img/debug.png")
+        self.inspirationImage = pygame.image.load("img/inspiration.png")
 
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
@@ -69,6 +70,7 @@ class Game:
         window.blit(label, (400, 45))
 
     def update(self):
+
         for i in range(self.numPlayers):
             train = self.players[i]
 
@@ -97,6 +99,8 @@ class Game:
             if tile.status == Status.OCCUPIED:
                 train.kill()
                 self.gameOver = True
+            if tile.status == Status.TRAINFOOD:
+                train.addBitsOfTrain()
 
             train.move(trainPos, self.lvl)
     
@@ -108,6 +112,9 @@ class Game:
                 #tile = self.lvl[x][y]
                 spritePos = x * tileImageWidth, y * tileImageHeight + offsetHUD
                 window.blit(self.tileImage, spritePos)
+
+                if self.lvl[x][y].status == Status.TRAINFOOD:
+                    window.blit(self.inspirationImage, spritePos)
 
         #render first player
         train = self.players[0]
@@ -126,10 +133,10 @@ class Game:
         return self.gameOver
 
     def addInspiration(self):
-        x = random.randrange(0, tileDimeX, 1)
-        y = random.randrange(0, tileDimeY, 1)
+        x = randrange(0, tileDimX, 1)
+        y = randrange(0, tileDimY, 1)
     
-        if lvl[x][y].status == Status.EMPTY:
-            lvl[x][y].status = Status.TRAINFOOD
+        if self.lvl[x][y].status == Status.EMPTY:
+            self.lvl[x][y].status = Status.TRAINFOOD
         else:
             self.addInspiration()

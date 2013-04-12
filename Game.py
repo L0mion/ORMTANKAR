@@ -66,8 +66,7 @@ class Game:
         label = self.hudFont.render("Score: " +str(score), 1, (255, 255, 255))
         window.blit(label, (400, 45))
 
-    def update(self, window):
-        self.renderHud(window)
+    def update(self):
 		
         for i in range(self.numPlayers):
             train = self.players[i]
@@ -88,6 +87,8 @@ class Game:
             train.move(trainPos)
     
     def render(self, window):
+        self.renderHud(window)
+
         for x in range(tileDimX):
             for y in range(tileDimY):
                 #tile = self.lvl[x][y]

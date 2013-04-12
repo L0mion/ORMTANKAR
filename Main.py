@@ -11,7 +11,8 @@ from pygame.locals import *
 from Game import *
 
 def runGame(game, window):
-    game.update(window)
+    game.update()
+    game.render(window)
     if game.isWon() == True:
         pygame.event.post(pygame.event.Event(QUIT))
 

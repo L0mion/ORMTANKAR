@@ -22,10 +22,12 @@ class Game:
         self.won = False
         self.numPlayers = numPlayers
         self.lvl = []
+        self.gameOver = False
 
         self.tileImage = pygame.image.load("img/tile.png")
         self.snake1Image = pygame.image.load("img/orm_red.png")
         self.snake2Image = pygame.image.load("img/orm_blue.png")
+        self.debugImage = pygame.image.load("img/debug.png")
 
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
@@ -67,7 +69,6 @@ class Game:
         window.blit(label, (400, 45))
 
     def update(self):
-		
         for i in range(self.numPlayers):
             train = self.players[i]
 
@@ -83,16 +84,21 @@ class Game:
                 trainPos.x = trainBody[0].X() - 1
 
             #loop
-            if trainPos.X() > tileDimX:
+            if trainPos.X() >= tileDimX:
                 trainPos.x = 0
             elif trainPos.X() < 0:
-                trainPos.x = tileDimX
-            elif trainPos.Y() > tileDimY:
+                trainPos.x = tileDimX - 1
+            elif trainPos.Y() >= tileDimY:
                 trainPos.y = 0
             elif trainPos.Y() < 0:
-                trainPos.y = tileDimY
+                trainPos.y = tileDimY - 1
 
-            train.move(trainPos)
+            tile = self.lvl[trainPos.X()][trainPos.Y()]
+            if tile.Status == Status.OCCUPIED:
+                train.kill()
+                self.gameOver = True
+
+            train.move(trainPos, self.lvl)
     
     def render(self, window):
         self.renderHud(window)
@@ -113,13 +119,19 @@ class Game:
         for j in range(train.length):
             window.blit(self.snake2Image, (train.body[j].X() * tileImageWidth, train.body[j].Y() * tileImageHeight + offsetHUD))
 
-        return 'update game'
+        for x in range(tileDimX):
+            for y in range(tileDimY):
+                tile = self.lvl[x][y]
+                if tile.status == Status.OCCUPIED:
+                    spritePos = x * tileImageWidth, y * tileImageHeight + offsetHUD
+                    window.blit(self.debugImage, spritePos)
+
     def isWon(self):
         return self.won
+
+    def isGameOver(self):
+        return self.gameOver
 
     def addInspiration(self):
         x = random.randrange(0, tileDimeX, 1)
         y = random.randrange(0, tileDimeY, 1)
-
-        
-   

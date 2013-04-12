@@ -83,7 +83,7 @@ def main():
                     if game.players[player2].direction != Direction.LEFT:
                         game.players[player2].direction = Direction.RIGHT
     
-        if inGame == True:
+        if inGame == True and game.isGameOver() == False:
             runGame(game, window)
         else:
             runMenu(startScreen, window)

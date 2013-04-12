@@ -82,7 +82,15 @@ class Game:
             elif train.Direction() == Direction.LEFT:
                 trainPos.x = trainBody[0].X() - 1
 
-            #check if valud
+            #loop
+            if trainPos.X() > tileDimX:
+                trainPos.x = 0
+            elif trainPos.X() < 0:
+                trainPos.x = tileDimX
+            elif trainPos.Y() > tileDimY:
+                trainPos.y = 0
+            elif trainPos.Y() < 0:
+                trainPos.y = tileDimY
 
             train.move(trainPos)
     

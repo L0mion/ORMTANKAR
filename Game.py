@@ -119,13 +119,6 @@ class Game:
         for j in range(train.length):
             window.blit(self.snake2Image, (train.body[j].X() * tileImageWidth, train.body[j].Y() * tileImageHeight + offsetHUD))
 
-        for x in range(tileDimX):
-            for y in range(tileDimY):
-                tile = self.lvl[x][y]
-                if tile.status == Status.OCCUPIED:
-                    spritePos = x * tileImageWidth, y * tileImageHeight + offsetHUD
-                    window.blit(self.debugImage, spritePos)
-
     def isWon(self):
         return self.won
 

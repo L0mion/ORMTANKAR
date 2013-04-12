@@ -1,6 +1,6 @@
 import pygame
-from pygame.locals import *
 import sys
+from pygame.locals import *
 
 windowWidth = 800
 windowHeight = 800
@@ -14,12 +14,13 @@ fpsClock = pygame.time.Clock()
 window = pygame.display.set_mode(windowSize)
 pygame.display.set_caption("ORMTANKAR - Snake of Thought - av mylingmygel.")
 
-while True:
+running = True
+while running:
     window.fill(blackColor)
 
     for event in pygame.event.get():
         if event.type == QUIT:
-               pygame.quit()
+               running = False
         elif event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 pygame.event.post(pygame.event.Event(QUIT))

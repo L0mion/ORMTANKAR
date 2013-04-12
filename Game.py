@@ -22,6 +22,7 @@ class Game:
         self.won = False
         self.numPlayers = numPlayers
         self.lvl = []
+        self.gameOver = False
 
         self.tileImage = pygame.image.load("img/tile.png")
         self.snake1Image = pygame.image.load("img/orm_red.png")
@@ -74,13 +75,18 @@ class Game:
             if trainPos.X() > tileDimX:
                 trainPos.x = 0
             elif trainPos.X() < 0:
-                trainPos.x = tileDimX
+                trainPos.x = tileDimX - 1
             elif trainPos.Y() > tileDimY:
                 trainPos.y = 0
             elif trainPos.Y() < 0:
-                trainPos.y = tileDimY
+                trainPos.y = tileDimY - 1
 
-            train.move(trainPos)
+            tile = self.lvl[trainPos.X()][trainPos.Y()]
+            if tile.Status == Status.OCCUPIED:
+                train.kill()
+                self.gameOver = True
+
+            train.move(trainPos, self.lvl)
     
     def render(self, window):
         for x in range(tileDimX):
@@ -99,6 +105,7 @@ class Game:
         for j in range(train.length):
             window.blit(self.snake2Image, (train.body[j].X() * tileImageWidth, train.body[j].Y() * tileImageHeight + offsetHUD))
 
-        return 'update game'
     def isWon(self):
         return self.won
+    def isGameOver(self):
+        return self.gameOver

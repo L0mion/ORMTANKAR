@@ -53,7 +53,7 @@ def main():
                 if event.key == K_ESCAPE:
                     pygame.event.post(pygame.event.Event(QUIT))
     
-        if inGame == True:
+        if inGame == True & game.isGameOver() == False:
             runGame(game, window)
         else:
             runMenu(startScreen, window)

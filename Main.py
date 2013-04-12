@@ -13,7 +13,6 @@ from pygame.locals import *
 from Game import *
 
 def runGame(game, window):
-    #game.update()
     game.render(window)
     if game.isWon() == True:
         pygame.event.post(pygame.event.Event(QUIT))
@@ -42,6 +41,9 @@ def main():
     game.start()
     inGame = False
     
+    #start multihreaded functions
+    game.updatePlayers()
+
     #main loop
     running = True
     while running:
@@ -54,6 +56,9 @@ def main():
                    running = False
             elif event.type == KEYDOWN:
                 inGame = True
+                if game.isGameOver() == True:
+                    inGame = False
+                    game.start() #restart
                 if event.key == K_ESCAPE:
                     pygame.event.post(pygame.event.Event(QUIT))
 
@@ -83,7 +88,7 @@ def main():
                     if game.players[player2].direction != Direction.LEFT:
                         game.players[player2].direction = Direction.RIGHT
     
-        if inGame == True and game.isGameOver() == False:
+        if inGame == True:
             runGame(game, window)
         else:
             runMenu(startScreen, window)

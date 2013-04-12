@@ -37,11 +37,11 @@ class Game:
         self.hudFont = pygame.font.SysFont("Calibri", 26)
 
     def start(self):
+        self.gameOver = False
+        self.won = False
         self.startLvl()
         self.startPlayers()
 
-        #init multithreading functions
-        self.updatePlayers()
         self.updateWorld()
         
     def startLvl(self): #initializes level
@@ -81,38 +81,39 @@ class Game:
         t.daemon = True
         t.start()
 
-        for i in range(self.numPlayers):
-            train = self.players[i]
+        if self.gameOver == False:
+            for i in range(self.numPlayers):
+                train = self.players[i]
 
-            trainBody = train.Body()
-            trainPos = Vec2(trainBody[0].X(), trainBody[0].Y())
-            if train.Direction() == Direction.UP:
-                trainPos.y = trainBody[0].Y() - 1
-            elif train.Direction() == Direction.DOWN:
-                trainPos.y = trainBody[0].Y() + 1
-            elif train.Direction() == Direction.RIGHT:
-                trainPos.x = trainBody[0].X() + 1
-            elif train.Direction() == Direction.LEFT:
-                trainPos.x = trainBody[0].X() - 1
+                trainBody = train.Body()
+                trainPos = Vec2(trainBody[0].X(), trainBody[0].Y())
+                if train.Direction() == Direction.UP:
+                    trainPos.y = trainBody[0].Y() - 1
+                elif train.Direction() == Direction.DOWN:
+                    trainPos.y = trainBody[0].Y() + 1
+                elif train.Direction() == Direction.RIGHT:
+                    trainPos.x = trainBody[0].X() + 1
+                elif train.Direction() == Direction.LEFT:
+                    trainPos.x = trainBody[0].X() - 1
 
-            #loop
-            if trainPos.X() >= tileDimX:
-                trainPos.x = 0
-            elif trainPos.X() < 0:
-                trainPos.x = tileDimX - 1
-            elif trainPos.Y() >= tileDimY:
-                trainPos.y = 0
-            elif trainPos.Y() < 0:
-                trainPos.y = tileDimY - 1
+                #loop
+                if trainPos.X() >= tileDimX:
+                    trainPos.x = 0
+                elif trainPos.X() < 0:
+                    trainPos.x = tileDimX - 1
+                elif trainPos.Y() >= tileDimY:
+                    trainPos.y = 0
+                elif trainPos.Y() < 0:
+                    trainPos.y = tileDimY - 1
 
-            tile = self.lvl[trainPos.X()][trainPos.Y()]
-            if tile.status == Status.OCCUPIED:
-                train.kill()
-                self.gameOver = True
-            if tile.status == Status.TRAINFOOD:
-                train.addBitsOfTrain()
+                tile = self.lvl[trainPos.X()][trainPos.Y()]
+                if tile.status == Status.OCCUPIED:
+                    train.kill()
+                    self.gameOver = True
+                if tile.status == Status.TRAINFOOD:
+                    train.addBitsOfTrain()
 
-            train.move(trainPos, self.lvl)
+                train.move(trainPos, self.lvl)
 
     def updateWorld(self):
         t = threading.Timer(0.5, self.updateWorld)
@@ -123,7 +124,7 @@ class Game:
 
     #def update(self):
     #    self.updatePlayers()
-    
+
     def render(self, window):
         self.renderHud(window)
 

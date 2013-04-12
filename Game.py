@@ -38,9 +38,6 @@ class Game:
     def start(self):
         self.startLvl()
         self.startPlayers()
-
-        #init multithreading functions
-        self.updatePlayers()
         
     def startLvl(self): #initializes level
         #init lvl
@@ -108,9 +105,6 @@ class Game:
                 self.gameOver = True
 
             train.move(trainPos, self.lvl)
-
-    #def update(self):
-    #    self.updatePlayers()
         
     def render(self, window):
         self.renderHud(window)

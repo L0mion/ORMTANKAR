@@ -13,7 +13,6 @@ from pygame.locals import *
 from Game import *
 
 def runGame(game, window):
-    #game.update()
     game.render(window)
     if game.isWon() == True:
         pygame.event.post(pygame.event.Event(QUIT))
@@ -42,6 +41,9 @@ def main():
     game.start()
     inGame = False
     
+    #start multihreaded functions
+    game.updatePlayers()
+
     #main loop
     running = True
     while running:

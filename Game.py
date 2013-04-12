@@ -11,8 +11,8 @@ from pygame import *
 numPlayers = 2
 trainStartLength = 3
 tileDimX = 32
-tileDimY = 24
-offsetHUD = 40
+tileDimY = 22
+offsetHUD = 90
 tileImageWidth = 25
 tileImageHeight = 25
 
@@ -25,6 +25,10 @@ class Game:
 
         self.tileImage = pygame.image.load("img/tile.png")
         self.snake1Image = pygame.image.load("img/orm_red.png")
+
+        self.hudTitleImage = pygame.image.load("img/hud_title.png")
+        self.hudDividerImage = pygame.image.load("img/hud_divider.png")
+        self.hudFont = pygame.font.SysFont("Calibri", 26)
 
     def start(self):
         self.startLvl()
@@ -54,7 +58,16 @@ class Game:
         playerPositions.append(Vec2(24, 14))
         self.players.append(Train(3, playerPositions))
 
+    def renderHud(self, window):
+        window.blit(self.hudTitleImage, (0, 0))
+        window.blit(self.hudDividerImage, (0, 88))
+        score = 40
+        label = self.hudFont.render("Score: " +str(score), 1, (255, 255, 255))
+        window.blit(label, (400, 45))
+
     def update(self, window):
+        self.renderHud(window)
+
         for x in range(tileDimX):
             for y in range(tileDimY):
                 #tile = self.lvl[x][y]
@@ -69,3 +82,4 @@ class Game:
         return 'update game'
     def isWon(self):
         return self.won
+   

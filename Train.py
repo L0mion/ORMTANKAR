@@ -4,7 +4,7 @@ from SimpleMath import *
 
 class Train:
     def __init__(self, startLength, startPosArray):
-        self.length = 0
+        self.length = startLength
         self.body = []
 
         i = 0

@@ -15,3 +15,8 @@ class Tile:
     def __init__(self, status, special):
         self.status = status
         self.special = special
+
+    def Status(self):
+        return self.status
+    def Special(self):
+        return self.special

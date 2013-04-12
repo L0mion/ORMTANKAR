@@ -42,6 +42,7 @@ class Game:
 
         #init multithreading functions
         self.updatePlayers()
+        self.updateWorld()
         
     def startLvl(self): #initializes level
         #init lvl
@@ -75,7 +76,11 @@ class Game:
         window.blit(label, (400, 45))
 
 
-    def update(self):
+    def updatePlayers(self):
+        t = threading.Timer(0.1, self.updatePlayers)
+        t.daemon = True
+        t.start()
+
         for i in range(self.numPlayers):
             train = self.players[i]
 
@@ -109,9 +114,16 @@ class Game:
 
             train.move(trainPos, self.lvl)
 
+    def updateWorld(self):
+        t = threading.Timer(0.5, self.updateWorld)
+        t.daemon = True
+        t.start()
+
+        self.addInspiration()
+
     #def update(self):
     #    self.updatePlayers()
-        
+    
     def render(self, window):
         self.renderHud(window)
 

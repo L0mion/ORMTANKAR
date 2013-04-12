@@ -27,7 +27,7 @@ class Game:
         self.tileImage = pygame.image.load("img/tile.png")
         self.snake1Image = pygame.image.load("img/orm_red.png")
         self.snake2Image = pygame.image.load("img/orm_blue.png")
-        self.debugImage = pygame.image.load("img/debug.png");
+        self.debugImage = pygame.image.load("img/debug.png")
 
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
@@ -124,3 +124,12 @@ class Game:
 
     def isGameOver(self):
         return self.gameOver
+
+    def addInspiration(self):
+        x = random.randrange(0, tileDimeX, 1)
+        y = random.randrange(0, tileDimeY, 1)
+    
+        if lvl[x][y].status == Status.EMPTY:
+            lvl[x][y].status = Status.TRAINFOOD
+        else:
+            self.addInspiration()

@@ -41,6 +41,7 @@ class Game:
             randomPositions = []
             
             randomPos = Vec2(randint(0, tileDimX), randint(0, tileDimY)) #start pos of train
+            #if(self.lvl[randomPos.X()][randomPos.Y].Status() == Status.EMPTY)
             #if randompos valid...
             randomPositions.append(randomPos)
             randomPositions.append(Vec2(0, 0)) #TEMP

@@ -128,3 +128,8 @@ class Game:
     def addInspiration(self):
         x = random.randrange(0, tileDimeX, 1)
         y = random.randrange(0, tileDimeY, 1)
+    
+        if lvl[x][y].status == Status.EMPTY:
+            lvl[x][y].status = Status.TRAINFOOD
+        else:
+            self.addInspiration()

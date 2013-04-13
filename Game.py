@@ -106,6 +106,25 @@ class Game:
         self.renderPlayerMultiplier(self.players[1], (340, 45), window)
 
     def updateTrain(self, train, othertrain):
+        
+        direction = train.direction;
+        if len(train.inputQueue) > 0:
+            direction = train.inputQueue.pop()
+            train.inputQueue.clear()
+
+        if direction == Direction.UP:
+            if train.direction != Direction.DOWN:
+                train.direction = Direction.UP
+        elif direction == Direction.DOWN:
+            if train.direction != Direction.UP:
+                train.direction = Direction.DOWN
+        elif direction == Direction.LEFT:
+            if train.direction != Direction.RIGHT:
+                train.direction = Direction.LEFT
+        elif direction == Direction.RIGHT:
+            if train.direction != Direction.LEFT:
+                train.direction = Direction.RIGHT
+        
         trainBody = train.Body()
         trainPos = Vec2(trainBody[0].X(), trainBody[0].Y())
         if train.Direction() == Direction.UP:

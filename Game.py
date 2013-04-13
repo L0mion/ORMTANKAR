@@ -40,6 +40,13 @@ class Game:
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
         self.hudFont = pygame.font.SysFont("Calibri", 26)
+        self.player1Image = pygame.image.load("img/player1.png")
+        self.player2Image = pygame.image.load("img/player2.png")
+        self.mult0Image = pygame.image.load("img/0.png")
+        self.mult2Image = pygame.image.load("img/2.png")
+        self.mult4Image = pygame.image.load("img/4.png")
+        self.mult8Image = pygame.image.load("img/8.png")
+        self.mult16Image = pygame.image.load("img/16.png")
 
     def start(self):
         self.mindmaps = []
@@ -74,10 +81,20 @@ class Game:
 
     def renderHud(self, window):
         window.blit(self.hudTitleImage, (0, 0))
+        window.blit(self.player1Image, (200, 0))
+        window.blit(self.player2Image, (200, 45))
         window.blit(self.hudDividerImage, (0, 88))
         score = 40
         label = self.hudFont.render("Score: " +str(score), 1, (255, 255, 255))
         window.blit(label, (400, 45))
+
+   #     renderPlayerMultiplier(self.players[0], (0, 0))
+   #     renderPlayerMultiplier(self.players[1], (0, 0))
+   #
+   # def renderPlayerMultiplier(self, train, pos):
+   #     image = self.mult0Image
+
+        # if(train.brainstorming)
 
     def updateTrain(self, train, othertrain):
         trainBody = train.Body()
@@ -148,8 +165,9 @@ class Game:
         for mindmap in self.mindmaps:
             mindmap.timeLeft = mindmap.timeLeft - delta
             if mindmap.timeLeft <= 0:
-                self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].special = Special.NA
-                self.mindmaps.pop(self.mindmaps.index(mindmap))
+                if self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].status == Status.OCCUPIED: 
+                    self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].special = Special.NA
+                    self.mindmaps.pop(self.mindmaps.index(mindmap))
 
     def updateWorld(self):
         t = threading.Timer(1.5, self.updateWorld)

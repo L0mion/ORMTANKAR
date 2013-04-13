@@ -29,6 +29,7 @@ class Game:
         self.lvl = []
         self.mindmaps = []
         self.gameOver = False
+        self.score = 0
 
         self.tileImage = pygame.image.load("img/tile.png")
         self.snake1Image = pygame.image.load("img/orm_red.png")
@@ -39,7 +40,8 @@ class Game:
 
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
-        self.hudFont = pygame.font.SysFont("Calibri", 26)
+        self.hudFont = pygame.font.SysFont("System", 50)
+        self.scoreFont = pygame.font.SysFont("System", 100)
         self.player1Image = pygame.image.load("img/player1.png")
         self.player2Image = pygame.image.load("img/player2.png")
         self.mult0Image = pygame.image.load("img/0.png")
@@ -47,7 +49,7 @@ class Game:
         self.mult4Image = pygame.image.load("img/4.png")
         self.mult8Image = pygame.image.load("img/8.png")
         self.mult16Image = pygame.image.load("img/16.png")
-        self.length = pygame.image.load("img/length.png")
+        self.lengthImage = pygame.image.load("img/length.png")
 
     def start(self):
         self.mindmaps = []
@@ -55,6 +57,7 @@ class Game:
         self.won = False
         self.startLvl()
         self.startPlayers()
+        self.score = 0
         
     def startLvl(self): #initializes level
         #init lvl
@@ -82,13 +85,13 @@ class Game:
 
     def renderPlayerMultiplier(self, train, pos, window):
         image = self.mult0Image
-        if(train.brainstorming == 2):
+        if(train.curMultiplier == 2):
             image = self.mult2Image
-        if(train.brainstorming == 4):
+        if(train.curMultiplier == 4):
             image = self.mult4Image
-        if(train.brainstorming == 8):
+        if(train.curMultiplier == 8):
             image = self.mult8Image
-        if(train.brainstorming == 16):
+        if(train.curMultiplier == 16):
             image = self.mult16Image
         window.blit(image, pos)
 
@@ -97,10 +100,17 @@ class Game:
         window.blit(self.hudTitleImage, (0, 0))
         window.blit(self.player1Image, (200, 0))
         window.blit(self.player2Image, (200, 45))
+        window.blit(self.lengthImage, (450, 0))
+        window.blit(self.lengthImage, (450, 45))
+        player1length = self.hudFont.render(str(self.players[0].length), 1, (200, 200, 200))
+        window.blit(player1length, (555, 5))
+        player2length = self.hudFont.render(str(self.players[1].length), 1, (200, 200, 200))
+        window.blit(player2length, (555, 50))
+
         window.blit(self.hudDividerImage, (0, 88))
-        score = 40
-        label = self.hudFont.render("Score: " +str(score), 1, (255, 255, 255))
-        window.blit(label, (400, 45))
+
+        score = self.scoreFont.render(str(self.score), 1, (255, 255, 255))
+        window.blit(score, (625, 15))
 
         self.renderPlayerMultiplier(self.players[0], (340, 0), window)
         self.renderPlayerMultiplier(self.players[1], (340, 45), window)
@@ -147,8 +157,8 @@ class Game:
             trainPos.y = tileDimY - 1
         
         tile = self.lvl[trainPos.X()][trainPos.Y()]
-        if tile.status == Status.OCCUPIED:
-            if tile.special == Special.SPECIAL:
+        if tile.Status() == Status.OCCUPIED:
+            if tile.Special() == Special.SPECIAL:
                 #BRAINSTORM
                 if train.curMultiplier > 0:
                     train.curMultiplier = train.curMultiplier * 2
@@ -160,6 +170,9 @@ class Game:
                 self.gameOver = True
         elif tile.status == Status.TRAINFOOD:
             train.addBitsOfTrain()
+        elif tile.status == Status.EMPTY:
+            if tile.special == Special.SPECIAL:
+                train.addMindmap(Vec2(trainPos.X(), trainPos.Y()))
         
         train.move(trainPos, self.lvl, othertrain)
 

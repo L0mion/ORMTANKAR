@@ -19,6 +19,7 @@ class Train:
         self.inputQueue = []
         self.brainstorming = 0
         self.curMultiplier = 0
+        self.mindmaps = []
 
         i = 0
         while i < startLength:
@@ -34,15 +35,20 @@ class Train:
 
         leavingPortal = False
         if lvl[self.body[i].X()][self.body[i].Y()].special == Special.SPECIAL:
-           for tile in othersnake.body:
-                if tile.X() == self.body[i].X():
-                    if tile.Y() == self.body[i].Y():
+            for mindmap in othersnake.mindmaps:
+                if mindmap.X() == self.body[i].X():
+                    if mindmap.Y() == self.body[i].Y():
                         leavingPortal = True
-           if leavingPortal == True:
+            if leavingPortal == True:
                self.brainstorming = self.brainstorming - 1
-           if self.brainstorming == 0:
+            if self.brainstorming <= 0:
                derp = 'SCORE'
+               self.brainstorming = 0
 
+        for mindmap in self.mindmaps:
+            if mindmap.X() == self.body[i].X():
+                if mindmap.Y() == self.body[i].Y():
+                    self.mindmaps.pop(self.mindmaps.index(mindmap))
 
         lvl[self.body[i].X()][self.body[i].Y()].status = Status.EMPTY #last bit of snake is empty
 
@@ -69,3 +75,6 @@ class Train:
 
     def kill(self):
         self.alive = False
+
+    def addMindmap(self, mindmap):
+        self.mindmaps.append(mindmap)

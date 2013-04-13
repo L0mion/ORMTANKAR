@@ -119,8 +119,8 @@ class Game:
         score = self.scoreFont.render(str(self.score), 1, (255, 255, 255))
         window.blit(score, (625, 15))
 
-        self.renderPlayerMultiplier(self.players[0], (340, 0), window)
-        self.renderPlayerMultiplier(self.players[1], (340, 45), window)
+        self.renderPlayerMultiplier(self.players[0], (340, -2), window)
+        self.renderPlayerMultiplier(self.players[1], (340, 43), window)
 
     def applyScore(self, train):
         self.score += train.length * train.curMultiplier

@@ -45,6 +45,7 @@ def main():
     #start multihreaded functions
     game.updatePlayers()
     game.spawnMindmaps()
+    game.updateWorld()
 
     #main loop
     running = True

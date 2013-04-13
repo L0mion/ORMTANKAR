@@ -35,6 +35,7 @@ class Game:
         self.snake2Image = pygame.image.load("img/orm_blue.png")
         self.debugImage = pygame.image.load("img/debug.png")
         self.mindmapImage = pygame.image.load("img/tileMindmap.png")
+        self.inspirationImage = pygame.image.load("img/inspiration.png")
 
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
@@ -112,6 +113,8 @@ class Game:
             else:
                 train.kill()
                 self.gameOver = True
+        elif tile.status == Status.TRAINFOOD:
+            train.addBitsOfTrain()
         
         train.move(trainPos, self.lvl, othertrain)
 
@@ -129,16 +132,17 @@ class Game:
         t.daemon = True
         t.start()
 
-        #randomize a valid position
-        valid = False
-        randomPos = Vec2(0,0)
-        while valid == False:
-            randomPos = Vec2(randint(0, tileDimX), randint(0, tileDimY))
-            if self.lvl[randomPos.X()][randomPos.Y()].Status() == Status.EMPTY:
-                valid = True
-        
-        self.mindmaps.append(Mindmap(randomPos, mindmapLifetime))
-        self.lvl[randomPos.X()][randomPos.Y()].special = Special.SPECIAL
+        if self.gameOver == False:
+            #randomize a valid position
+            valid = False
+            randomPos = Vec2(0,0)
+            while valid == False:
+                randomPos = Vec2(randint(0, tileDimX), randint(0, tileDimY))
+                if self.lvl[randomPos.X()][randomPos.Y()].Status() == Status.EMPTY:
+                    valid = True
+            
+            self.mindmaps.append(Mindmap(randomPos, mindmapLifetime))
+            self.lvl[randomPos.X()][randomPos.Y()].special = Special.SPECIAL
     
     def update(self, delta):
         for mindmap in self.mindmaps:
@@ -146,6 +150,14 @@ class Game:
             if mindmap.timeLeft <= 0:
                 self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].special = Special.NA
                 self.mindmaps.pop(self.mindmaps.index(mindmap))
+
+    def updateWorld(self):
+        t = threading.Timer(1.5, self.updateWorld)
+        t.daemon = True
+        t.start()
+
+        if self.gameOver == False:
+            self.addInspiration()
 
     def render(self, window):
         self.renderHud(window)
@@ -155,6 +167,9 @@ class Game:
             for y in range(tileDimY):
                 spritePos = x * tileImageWidth, y * tileImageHeight + offsetHUD
                 window.blit(self.tileImage, spritePos)
+                if self.lvl[x][y].status == Status.TRAINFOOD:
+                    window.blit(self.inspirationImage, spritePos)
+                
 
         #render mindamps
         for i in range(len(self.mindmaps)):
@@ -178,10 +193,10 @@ class Game:
         return self.gameOver
 
     def addInspiration(self):
-        x = random.randrange(0, tileDimeX, 1)
-        y = random.randrange(0, tileDimeY, 1)
+        x = randrange(0, tileDimX, 1)
+        y = randrange(0, tileDimY, 1)
     
-        if lvl[x][y].status == Status.EMPTY:
-            lvl[x][y].status = Status.TRAINFOOD
+        if self.lvl[x][y].status == Status.EMPTY:
+            self.lvl[x][y].status = Status.TRAINFOOD
         else:
             self.addInspiration()

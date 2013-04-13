@@ -51,12 +51,19 @@ class Game:
         self.mult16Image = pygame.image.load("img/16.png")
         self.lengthImage = pygame.image.load("img/length.png")
 
+        self.backgroundMusic = pygame.mixer.Sound("sound/background_music.ogg")
+        self.deathSound = pygame.mixer.Sound("sound/death.ogg")
+        self.inspirationSound = pygame.mixer.Sound("sound/inspiration.ogg")
+
     def start(self):
         self.mindmaps = []
         self.gameOver = False
         self.won = False
         self.startLvl()
         self.startPlayers()
+
+        self.backgroundMusic.play(-1)
+
         self.score = 0
         
     def startLvl(self): #initializes level
@@ -115,6 +122,10 @@ class Game:
         self.renderPlayerMultiplier(self.players[0], (340, -2), window)
         self.renderPlayerMultiplier(self.players[1], (340, 43), window)
 
+    def applyScore(self, train):
+        self.score += train.length * train.curMultiplier
+        train.curMultiplier = 0
+
     def updateTrain(self, train, othertrain):
         
         direction = train.direction;
@@ -159,6 +170,7 @@ class Game:
         tile = self.lvl[trainPos.X()][trainPos.Y()]
         if tile.Status() == Status.OCCUPIED:
             if tile.Special() == Special.SPECIAL:
+                train.addMindmap(Vec2(trainPos.X(), trainPos.Y()))
                 #BRAINSTORM
                 if train.curMultiplier > 0:
                     train.curMultiplier = train.curMultiplier * 2
@@ -168,13 +180,17 @@ class Game:
             else:
                 train.kill()
                 self.gameOver = True
+                self.backgroundMusic.fadeout(1000)
+                self.deathSound.play(0)
+
         elif tile.status == Status.TRAINFOOD:
             train.addBitsOfTrain()
-        elif tile.status == Status.EMPTY:
-            if tile.special == Special.SPECIAL:
-                train.addMindmap(Vec2(trainPos.X(), trainPos.Y()))
+            self.inspirationSound.play(0)               
         
         train.move(trainPos, self.lvl, othertrain)
+
+        if train.onMindmap == False:
+            self.applyScore(train)
 
     def updatePlayers(self):
         t = threading.Timer(0.5, self.updatePlayers)

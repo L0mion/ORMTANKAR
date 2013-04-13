@@ -20,6 +20,7 @@ class Train:
         self.brainstorming = 0
         self.curMultiplier = 0
         self.mindmaps = []
+        self.onMindmap = False
 
         i = 0
         while i < startLength:
@@ -33,22 +34,22 @@ class Train:
 
         i = self.length - 1
 
-        leavingPortal = False
-        if lvl[self.body[i].X()][self.body[i].Y()].special == Special.SPECIAL:
-            for mindmap in othersnake.mindmaps:
-                if mindmap.X() == self.body[i].X():
-                    if mindmap.Y() == self.body[i].Y():
-                        leavingPortal = True
-            if leavingPortal == True:
-               self.brainstorming = self.brainstorming - 1
-               if self.brainstorming <= 0:
-                    derp = 'SCORE'
-                    self.brainstorming = 0
-
-        for mindmap in self.mindmaps:
-            if mindmap.X() == self.body[i].X():
-                if mindmap.Y() == self.body[i].Y():
-                    self.mindmaps.pop(self.mindmaps.index(mindmap))
+#        leavingPortal = False
+#        if lvl[self.body[i].X()][self.body[i].Y()].special == Special.SPECIAL:
+#            for mindmap in othersnake.mindmaps:
+#                if mindmap.X() == self.body[i].X():
+#                    if mindmap.Y() == self.body[i].Y():
+#                        leavingPortal = True
+#            if leavingPortal == True:
+#               self.brainstorming = self.brainstorming - 1
+#               if self.brainstorming <= 0:
+#                    derp = 'SCORE'
+#                    self.brainstorming = 0
+#
+#        for mindmap in self.mindmaps:
+#            if mindmap.X() == self.body[i].X():
+#                if mindmap.Y() == self.body[i].Y():
+#                    self.mindmaps.pop(self.mindmaps.index(mindmap))
 
         lvl[self.body[i].X()][self.body[i].Y()].status = Status.EMPTY #last bit of snake is empty
 
@@ -58,6 +59,19 @@ class Train:
         self.body[0] = newPos
 
         lvl[self.body[0].X()][self.body[0].Y()].status = Status.OCCUPIED #new bit of snake is occupied
+
+        for mindmap in self.mindmaps:
+            mindmapActive = False
+            for body in self.body:
+                if body.X() == mindmap.X() and body.Y() == mindmap.Y():
+                    mindmapActive = True
+            if mindmapActive == False:
+                self.mindmaps.pop(self.mindmaps.index(mindmap))
+
+        if len(self.mindmaps) == 0:
+            self.onMindmap = False
+        else:
+            self.onMindmap = True
 
     def addBitsOfTrain(self):
         position = Vec2(self.body[self.length-1].X(), self.body[self.length-1].Y())

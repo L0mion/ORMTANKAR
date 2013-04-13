@@ -48,12 +48,18 @@ class Game:
         self.mult8Image = pygame.image.load("img/8.png")
         self.mult16Image = pygame.image.load("img/16.png")
 
+        self.backgroundMusic = pygame.mixer.Sound("sound/background_music.ogg")
+        self.deathSound = pygame.mixer.Sound("sound/death.ogg")
+        self.inspirationSound = pygame.mixer.Sound("sound/inspiration.ogg")
+
     def start(self):
         self.mindmaps = []
         self.gameOver = False
         self.won = False
         self.startLvl()
         self.startPlayers()
+
+        self.backgroundMusic.play(-1)
         
     def startLvl(self): #initializes level
         #init lvl
@@ -149,8 +155,11 @@ class Game:
             else:
                 train.kill()
                 self.gameOver = True
+                self.backgroundMusic.fadeout(1000)
+                self.deathSound.play(0)
         elif tile.status == Status.TRAINFOOD:
             train.addBitsOfTrain()
+            self.inspirationSound.play(0)
         
         train.move(trainPos, self.lvl, othertrain)
 

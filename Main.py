@@ -33,7 +33,7 @@ def main():
     windowSize = windowWidth, windowHeight
     window = pygame.display.set_mode(windowSize)
     pygame.display.set_caption("TAGTANKAR - Train of Thought - av mylingmygel.")
-    
+
     startScreen = StartScreen()
     
     #init game

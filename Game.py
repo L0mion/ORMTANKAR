@@ -79,6 +79,19 @@ class Game:
         playerPositions.append(Vec2(24, 14))
         self.players.append(Train(3, playerPositions))
 
+    def renderPlayerMultiplier(self, train, pos, window):
+        image = self.mult0Image
+        if(train.brainstorming == 2):
+            image = self.mult2Image
+        if(train.brainstorming == 4):
+            image = self.mult4Image
+        if(train.brainstorming == 8):
+            image = self.mult8Image
+        if(train.brainstorming == 16):
+            image = self.mult16Image
+        window.blit(image, pos)
+
+
     def renderHud(self, window):
         window.blit(self.hudTitleImage, (0, 0))
         window.blit(self.player1Image, (200, 0))
@@ -88,13 +101,8 @@ class Game:
         label = self.hudFont.render("Score: " +str(score), 1, (255, 255, 255))
         window.blit(label, (400, 45))
 
-   #     renderPlayerMultiplier(self.players[0], (0, 0))
-   #     renderPlayerMultiplier(self.players[1], (0, 0))
-   #
-   # def renderPlayerMultiplier(self, train, pos):
-   #     image = self.mult0Image
-
-        # if(train.brainstorming)
+        self.renderPlayerMultiplier(self.players[0], (340, 0), window)
+        self.renderPlayerMultiplier(self.players[1], (340, 45), window)
 
     def updateTrain(self, train, othertrain):
         trainBody = train.Body()
@@ -154,7 +162,7 @@ class Game:
             valid = False
             randomPos = Vec2(0,0)
             while valid == False:
-                randomPos = Vec2(randint(0, tileDimX), randint(0, tileDimY))
+                randomPos = Vec2(randint(0, tileDimX - 1), randint(0, tileDimY - 1))
                 if self.lvl[randomPos.X()][randomPos.Y()].Status() == Status.EMPTY:
                     valid = True
             

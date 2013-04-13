@@ -122,6 +122,10 @@ class Game:
         self.renderPlayerMultiplier(self.players[0], (340, 0), window)
         self.renderPlayerMultiplier(self.players[1], (340, 45), window)
 
+    def applyScore(self, train):
+        self.score += train.length * train.curMultiplier
+        train.curMultiplier = 0
+
     def updateTrain(self, train, othertrain):
         
         direction = train.direction;
@@ -166,6 +170,7 @@ class Game:
         tile = self.lvl[trainPos.X()][trainPos.Y()]
         if tile.Status() == Status.OCCUPIED:
             if tile.Special() == Special.SPECIAL:
+                train.addMindmap(Vec2(trainPos.X(), trainPos.Y()))
                 #BRAINSTORM
                 if train.curMultiplier > 0:
                     train.curMultiplier = train.curMultiplier * 2
@@ -180,14 +185,12 @@ class Game:
 
         elif tile.status == Status.TRAINFOOD:
             train.addBitsOfTrain()
-            self.inspirationSound.play(0)
-
-        elif tile.status == Status.EMPTY:
-            if tile.special == Special.SPECIAL:
-                train.addMindmap(Vec2(trainPos.X(), trainPos.Y()))
-
+            self.inspirationSound.play(0)               
         
         train.move(trainPos, self.lvl, othertrain)
+
+        if train.onMindmap == False:
+            self.applyScore(train)
 
     def updatePlayers(self):
         t = threading.Timer(0.5, self.updatePlayers)

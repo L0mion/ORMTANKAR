@@ -47,6 +47,7 @@ class Game:
         self.mult4Image = pygame.image.load("img/4.png")
         self.mult8Image = pygame.image.load("img/8.png")
         self.mult16Image = pygame.image.load("img/16.png")
+        self.length = pygame.image.load("img/length.png")
 
     def start(self):
         self.mindmaps = []

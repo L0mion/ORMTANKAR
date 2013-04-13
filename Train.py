@@ -17,18 +17,32 @@ class Train:
         self.direction = Direction.UP
         self.alive = True
         self.inputQueue = []
+        self.brainstorming = 0
+        self.curMultiplier = 0
 
         i = 0
         while i < startLength:
             self.body.append(startPosArray[i])
             i = i + 1
 
-    def move(self, newPos, lvl):
+    def move(self, newPos, lvl, othersnake):
         #for i in range(self.length):
         #    self.body[self.length - (i + 1)] = self.body[self.length - i - 1]
         #self.body[0] = newPos
 
         i = self.length - 1
+
+        leavingPortal = False
+        if lvl[self.body[i].X()][self.body[i].Y()].special == Special.SPECIAL:
+           for tile in othersnake.body:
+                if tile.X() == self.body[i].X():
+                    if tile.Y() == self.body[i].Y():
+                        leavingPortal = True
+           if leavingPortal == True:
+               self.brainstorming = self.brainstorming - 1
+           if self.brainstorming == 0:
+               derp = 'SCORE'
+
 
         lvl[self.body[i].X()][self.body[i].Y()].status = Status.EMPTY #last bit of snake is empty
 

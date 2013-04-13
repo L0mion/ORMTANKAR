@@ -12,7 +12,8 @@ from Train import *
 from pygame.locals import *
 from Game import *
 
-def runGame(game, window):
+def runGame(game, window, delta):
+    game.update(delta)
     game.render(window)
     if game.isWon() == True:
         pygame.event.post(pygame.event.Event(QUIT))
@@ -43,10 +44,15 @@ def main():
     
     #start multihreaded functions
     game.updatePlayers()
+    game.spawnMindmaps()
+    game.updateWorld()
 
     #main loop
     running = True
     while running:
+        dt = fpsClock.tick(15)
+        delta = 1 / float(dt) 
+
         window.fill(blackColor)
     
         player1 = 0
@@ -89,11 +95,8 @@ def main():
                         game.players[player2].inputQueue.append(Direction.RIGHT)
     
         if inGame == True:
-            runGame(game, window)
+            runGame(game, window, delta)
         else:
             runMenu(startScreen, window)
             
         pygame.display.update()
-
-        fpsClock.tick(30)
-

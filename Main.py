@@ -62,9 +62,11 @@ def main():
                    running = False
             elif event.type == KEYDOWN:
                 inGame = True
+
                 if game.isGameOver() == True:
                     inGame = False
                     game.start() #restart
+
                 if event.key == K_ESCAPE:
                     pygame.event.post(pygame.event.Event(QUIT))
 

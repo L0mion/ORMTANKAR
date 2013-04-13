@@ -40,8 +40,8 @@ class Game:
 
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
-        self.hudFont = pygame.font.SysFont("System", 50)
-        self.scoreFont = pygame.font.Font("img/BM_Pixel.otf", 26) #pygame.font.SysFont("System", 100)
+        self.hudFont = pygame.font.SysFont("Terminal", 50)
+        self.scoreFont = pygame.font.SysFont("Terminal", 100)
         self.player1Image = pygame.image.load("img/player1.png")
         self.player2Image = pygame.image.load("img/player2.png")
         self.mult0Image = pygame.image.load("img/0.png")
@@ -193,7 +193,7 @@ class Game:
             self.applyScore(train)
 
     def updatePlayers(self):
-        t = threading.Timer(0.5, self.updatePlayers)
+        t = threading.Timer(0.1, self.updatePlayers)
         t.daemon = True
         t.start()
 
@@ -219,12 +219,13 @@ class Game:
             self.lvl[randomPos.X()][randomPos.Y()].special = Special.SPECIAL
     
     def update(self, delta):
-        for mindmap in self.mindmaps:
-            mindmap.timeLeft = mindmap.timeLeft - delta
-            if mindmap.timeLeft <= 0:
-                if self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].status != Status.OCCUPIED: 
-                    self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].special = Special.NA
-                    self.mindmaps.pop(self.mindmaps.index(mindmap))
+        if self.gameOver == False:
+            for mindmap in self.mindmaps:
+                mindmap.timeLeft = mindmap.timeLeft - delta
+                if mindmap.timeLeft <= 0:
+                    if self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].status != Status.OCCUPIED: 
+                        self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].special = Special.NA
+                        self.mindmaps.pop(self.mindmaps.index(mindmap))
 
     def updateWorld(self):
         t = threading.Timer(1.5, self.updateWorld)

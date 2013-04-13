@@ -177,7 +177,7 @@ class Game:
         train.move(trainPos, self.lvl, othertrain)
 
     def updatePlayers(self):
-        t = threading.Timer(0.1, self.updatePlayers)
+        t = threading.Timer(0.5, self.updatePlayers)
         t.daemon = True
         t.start()
 
@@ -206,7 +206,7 @@ class Game:
         for mindmap in self.mindmaps:
             mindmap.timeLeft = mindmap.timeLeft - delta
             if mindmap.timeLeft <= 0:
-                if self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].status == Status.OCCUPIED: 
+                if self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].status != Status.OCCUPIED: 
                     self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].special = Special.NA
                     self.mindmaps.pop(self.mindmaps.index(mindmap))
 

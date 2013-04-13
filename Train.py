@@ -41,9 +41,9 @@ class Train:
                         leavingPortal = True
             if leavingPortal == True:
                self.brainstorming = self.brainstorming - 1
-            if self.brainstorming <= 0:
-               derp = 'SCORE'
-               self.brainstorming = 0
+               if self.brainstorming <= 0:
+                    derp = 'SCORE'
+                    self.brainstorming = 0
 
         for mindmap in self.mindmaps:
             if mindmap.X() == self.body[i].X():

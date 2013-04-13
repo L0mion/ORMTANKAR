@@ -3,12 +3,14 @@ import Train
 import Tile
 import pygame
 import threading
+import Mindmap
 
 from random import *
 from Train import *
 from Tile import *
 from pygame import *
 from threading import *
+from Mindmap import *
 
 numPlayers = 2
 trainStartLength = 3
@@ -17,6 +19,7 @@ tileDimY = 22
 offsetHUD = 90
 tileImageWidth = 25
 tileImageHeight = 25
+mindmapLifetime = 3
 
 class Game:
     def __init__(self):
@@ -24,18 +27,21 @@ class Game:
         self.won = False
         self.numPlayers = numPlayers
         self.lvl = []
+        self.mindmaps = []
         self.gameOver = False
 
         self.tileImage = pygame.image.load("img/tile.png")
         self.snake1Image = pygame.image.load("img/orm_red.png")
         self.snake2Image = pygame.image.load("img/orm_blue.png")
         self.debugImage = pygame.image.load("img/debug.png")
+        self.mindmapImage = pygame.image.load("img/tileMindmap.png")
 
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
         self.hudFont = pygame.font.SysFont("Calibri", 26)
 
     def start(self):
+        self.mindmaps = []
         self.gameOver = False
         self.won = False
         self.startLvl()
@@ -72,51 +78,88 @@ class Game:
         label = self.hudFont.render("Score: " +str(score), 1, (255, 255, 255))
         window.blit(label, (400, 45))
 
+    def updateTrain(self, train, othertrain):
+        trainBody = train.Body()
+        trainPos = Vec2(trainBody[0].X(), trainBody[0].Y())
+        if train.Direction() == Direction.UP:
+            trainPos.y = trainBody[0].Y() - 1
+        elif train.Direction() == Direction.DOWN:
+            trainPos.y = trainBody[0].Y() + 1
+        elif train.Direction() == Direction.RIGHT:
+            trainPos.x = trainBody[0].X() + 1
+        elif train.Direction() == Direction.LEFT:
+            trainPos.x = trainBody[0].X() - 1
+        
+        #loop
+        if trainPos.X() >= tileDimX:
+            trainPos.x = 0
+        elif trainPos.X() < 0:
+            trainPos.x = tileDimX - 1
+        elif trainPos.Y() >= tileDimY:
+            trainPos.y = 0
+        elif trainPos.Y() < 0:
+            trainPos.y = tileDimY - 1
+        
+        tile = self.lvl[trainPos.X()][trainPos.Y()]
+        if tile.status == Status.OCCUPIED:
+            if tile.special == Special.SPECIAL:
+                #BRAINSTORM
+                if train.curMultiplier > 0:
+                    train.curMultiplier = train.curMultiplier * 2
+                else:
+                    train.curMultiplier = 2 
+                    train.brainstorming = train.brainstorming + 1
+            else:
+                train.kill()
+                self.gameOver = True
+        
+        train.move(trainPos, self.lvl, othertrain)
+
     def updatePlayers(self):
         t = threading.Timer(0.1, self.updatePlayers)
         t.daemon = True
         t.start()
 
         if self.gameOver == False:
-            for i in range(self.numPlayers):
-                train = self.players[i]
+            self.updateTrain(self.players[0], self.players[1])
+            self.updateTrain(self.players[1], self.players[0])
+    
+    def spawnMindmaps(self):
+        t = threading.Timer(2, self.spawnMindmaps)
+        t.daemon = True
+        t.start()
 
-                trainBody = train.Body()
-                trainPos = Vec2(trainBody[0].X(), trainBody[0].Y())
-                if train.Direction() == Direction.UP:
-                    trainPos.y = trainBody[0].Y() - 1
-                elif train.Direction() == Direction.DOWN:
-                    trainPos.y = trainBody[0].Y() + 1
-                elif train.Direction() == Direction.RIGHT:
-                    trainPos.x = trainBody[0].X() + 1
-                elif train.Direction() == Direction.LEFT:
-                    trainPos.x = trainBody[0].X() - 1
-
-                #loop
-                if trainPos.X() >= tileDimX:
-                    trainPos.x = 0
-                elif trainPos.X() < 0:
-                    trainPos.x = tileDimX - 1
-                elif trainPos.Y() >= tileDimY:
-                    trainPos.y = 0
-                elif trainPos.Y() < 0:
-                    trainPos.y = tileDimY - 1
-
-                tile = self.lvl[trainPos.X()][trainPos.Y()]
-                if tile.status == Status.OCCUPIED:
-                    train.kill()
-                    self.gameOver = True
-
-                train.move(trainPos, self.lvl)
+        #randomize a valid position
+        valid = False
+        randomPos = Vec2(0,0)
+        while valid == False:
+            randomPos = Vec2(randint(0, tileDimX), randint(0, tileDimY))
+            if self.lvl[randomPos.X()][randomPos.Y()].Status() == Status.EMPTY:
+                valid = True
         
+        self.mindmaps.append(Mindmap(randomPos, mindmapLifetime))
+        self.lvl[randomPos.X()][randomPos.Y()].special = Special.SPECIAL
+    
+    def update(self, delta):
+        for mindmap in self.mindmaps:
+            mindmap.timeLeft = mindmap.timeLeft - delta
+            if mindmap.timeLeft <= 0:
+                self.lvl[mindmap.Pos().X()][mindmap.Pos().Y()].special = Special.NA
+                self.mindmaps.pop(self.mindmaps.index(mindmap))
+
     def render(self, window):
         self.renderHud(window)
 
+        #render tiles
         for x in range(tileDimX):
             for y in range(tileDimY):
-                #tile = self.lvl[x][y]
                 spritePos = x * tileImageWidth, y * tileImageHeight + offsetHUD
                 window.blit(self.tileImage, spritePos)
+
+        #render mindamps
+        for i in range(len(self.mindmaps)):
+            mindmapPos = self.mindmaps[i].Pos()
+            window.blit(self.mindmapImage, (mindmapPos.X() * tileImageWidth, mindmapPos.Y() * tileImageHeight + offsetHUD))
 
         #render first player
         train = self.players[0]

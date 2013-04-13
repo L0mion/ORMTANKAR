@@ -11,3 +11,6 @@ class Vec2:
         return self.x
     def Y(self):
         return self.y
+
+    def asPython(self):
+        return (self.x, self.y)

@@ -64,29 +64,29 @@ def main():
 
                 if event.key == K_w:
                     if game.players[player1].direction != Direction.DOWN:
-                        game.players[player1].direction = Direction.UP
+                        game.players[player1].inputQueue.append(Direction.UP)
                 if event.key == K_s :
                     if game.players[player1].direction != Direction.UP:
-                        game.players[player1].direction = Direction.DOWN
+                        game.players[player1].inputQueue.append(Direction.DOWN)
                 if event.key == K_a:
                     if game.players[player1].direction != Direction.RIGHT:
-                        game.players[player1].direction = Direction.LEFT
+                        game.players[player1].inputQueue.append(Direction.LEFT)
                 if event.key == K_d:
                     if game.players[player1].direction != Direction.LEFT:
-                        game.players[player1].direction = Direction.RIGHT
+                        game.players[player1].inputQueue.append(Direction.RIGHT)
 
                 if event.key == K_UP:
                     if game.players[player2].direction != Direction.DOWN:
-                        game.players[player2].direction = Direction.UP
+                        game.players[player2].inputQueue.append(Direction.UP)
                 if event.key == K_DOWN :
                     if game.players[player2].direction != Direction.UP:
-                        game.players[player2].direction = Direction.DOWN
+                        game.players[player2].inputQueue.append(Direction.DOWN)
                 if event.key == K_LEFT:
                     if game.players[player2].direction != Direction.RIGHT:
-                        game.players[player2].direction = Direction.LEFT
+                        game.players[player2].inputQueue.append(Direction.LEFT)
                 if event.key == K_RIGHT:
                     if game.players[player2].direction != Direction.LEFT:
-                        game.players[player2].direction = Direction.RIGHT
+                        game.players[player2].inputQueue.append(Direction.RIGHT)
     
         if inGame == True:
             runGame(game, window)

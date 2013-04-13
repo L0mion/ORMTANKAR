@@ -16,6 +16,7 @@ class Train:
         self.body = []
         self.direction = Direction.UP
         self.alive = True
+        self.inputQueue = []
 
         i = 0
         while i < startLength:

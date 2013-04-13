@@ -41,7 +41,7 @@ class Game:
         self.hudTitleImage = pygame.image.load("img/hud_title.png")
         self.hudDividerImage = pygame.image.load("img/hud_divider.png")
         self.hudFont = pygame.font.SysFont("System", 50)
-        self.scoreFont = pygame.font.SysFont("System", 100)
+        self.scoreFont = pygame.font.Font("img/BM_Pixel.otf", 26) #pygame.font.SysFont("System", 100)
         self.player1Image = pygame.image.load("img/player1.png")
         self.player2Image = pygame.image.load("img/player2.png")
         self.mult0Image = pygame.image.load("img/0.png")
